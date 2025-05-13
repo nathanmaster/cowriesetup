@@ -19,7 +19,7 @@ sudo -u cowrie /home/cowrie/cowrie/cowrie-env/bin/pip install -r /home/cowrie/co
 
 echo "[*] Setting up Cowrie Configurations..."
 sudo -u cowrie cp /home/cowrie/cowrie/etc/cowrie.cfg.dist /home/cowrie/cowrie/etc/cowrie.cfg
-sudo -u cowrie cp /home/cowrie/cowrie/etc/userdb.txt.dist /home/cowrie/cowrie/etc/userdb.txt
+sudo -u cowrie cp /home/cowrie/cowrie/etc/userdb.example /home/cowrie/cowrie/etc/userdb.txt
 
 echo "[*] Installing obscurer..."
 git clone https://github.com/411Hall/obscurer.git
