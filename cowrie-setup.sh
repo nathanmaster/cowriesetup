@@ -38,6 +38,7 @@ sed -i 's/\t/    /g' /tmp/obscurer/obscurer.py  # Replace tabs with 4 spaces
 echo "[*] Fixing invalid escape sequences in regular expressions..."
 sed -i 's/\\(/(/g' /tmp/obscurer/obscurer.py
 sed -i 's/\\|/|/g' /tmp/obscurer/obscurer.py
+sed -i 's/\\\//\//g' /tmp/obscurer/obscurer.py  # Fix the '\/' sequence
 
 # Run obscurer
 python3 /tmp/obscurer/obscurer.py --cowrie_path /home/cowrie/cowrie --os ubuntu --version 22.04
