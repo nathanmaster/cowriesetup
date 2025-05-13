@@ -25,9 +25,6 @@ echo "[*] Installing obscurer..."
 cd /tmp
 git clone https://github.com/411Hall/obscurer.git
 cd obscurer
-python3 -m venv env
-source env/bin/activate
-pip install -r requirements.txt
 python3 obscurer.py --cowrie_path /home/cowrie/cowrie --os ubuntu --version 22.04
 cd ..
 rm -rf /tmp/obscurer
