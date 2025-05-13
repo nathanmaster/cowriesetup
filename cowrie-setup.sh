@@ -25,7 +25,15 @@ echo "[*] Installing obscurer..."
 cd /tmp
 git clone https://github.com/411Hall/obscurer.git
 cd obscurer
-python3 obscurer.py --cowrie_path /home/cowrie/cowrie --os ubuntu --version 22.04
+
+# Automatically fix Python 2 print statements to Python 3
+echo "[*] Patching Python 2 print statements..."
+sed -i 's/print "\(.*\)"/print("\1")/' /tmp/obscurer/obscurer.py
+
+# Run obscurer
+python3 /tmp/obscurer/obscurer.py --cowrie_path /home/cowrie/cowrie --os ubuntu --version 22.04
+
+# Clean up
 cd ..
 rm -rf /tmp/obscurer
 
