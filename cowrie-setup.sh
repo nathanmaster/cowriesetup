@@ -26,19 +26,14 @@ cd /tmp
 git clone https://github.com/411Hall/obscurer.git
 cd obscurer
 
-# Automatically fix Python 2 print statements to Python 3
-echo "[*] Patching Python 2 print statements..."
+# Fix the invalid escape sequence in header
+echo "[*] Fixing invalid escape sequence in header..."
+sed -i 's/\\\//\//g' /tmp/obscurer/obscurer.py  # Fix invalid escape sequences
+
+# Fix the Python 2 print statement to Python 3
+echo "[*] Fixing print statements..."
 sed -i 's/print "\(.*\)"/print("\1")/' /tmp/obscurer/obscurer.py
-
-# Replace tabs with spaces for consistent indentation
-echo "[*] Fixing inconsistent indentation..."
-sed -i 's/\t/    /g' /tmp/obscurer/obscurer.py  # Replace tabs with 4 spaces
-
-# Fix regular expression escape sequence warnings
-echo "[*] Fixing invalid escape sequences in regular expressions..."
-sed -i 's/\\(/(/g' /tmp/obscurer/obscurer.py
-sed -i 's/\\|/|/g' /tmp/obscurer/obscurer.py
-sed -i 's/\\\//\//g' /tmp/obscurer/obscurer.py  # Fix the '\/' sequence
+sed -i 's/print header/print(header)/' /tmp/obscurer/obscurer.py  # Fix the specific print statement
 
 # Run obscurer
 python3 /tmp/obscurer/obscurer.py --cowrie_path /home/cowrie/cowrie --os ubuntu --version 22.04
