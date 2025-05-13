@@ -30,6 +30,15 @@ cd obscurer
 echo "[*] Patching Python 2 print statements..."
 sed -i 's/print "\(.*\)"/print("\1")/' /tmp/obscurer/obscurer.py
 
+# Replace tabs with spaces for consistent indentation
+echo "[*] Fixing inconsistent indentation..."
+sed -i 's/\t/    /g' /tmp/obscurer/obscurer.py  # Replace tabs with 4 spaces
+
+# Fix regular expression escape sequence warnings
+echo "[*] Fixing invalid escape sequences in regular expressions..."
+sed -i 's/\\(/(/g' /tmp/obscurer/obscurer.py
+sed -i 's/\\|/|/g' /tmp/obscurer/obscurer.py
+
 # Run obscurer
 python3 /tmp/obscurer/obscurer.py --cowrie_path /home/cowrie/cowrie --os ubuntu --version 22.04
 
