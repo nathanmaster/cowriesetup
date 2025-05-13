@@ -22,6 +22,7 @@ sudo -u cowrie cp /home/cowrie/cowrie/etc/cowrie.cfg.dist /home/cowrie/cowrie/et
 sudo -u cowrie cp /home/cowrie/cowrie/etc/userdb.example /home/cowrie/cowrie/etc/userdb.txt
 
 echo "[*] Installing obscurer..."
+cd /tmp
 git clone https://github.com/411Hall/obscurer.git
 cd obscurer
 python3 -m venv env
@@ -29,7 +30,7 @@ source env/bin/activate
 pip install -r requirements.txt
 python3 obscurer.py --cowrie_path /home/cowrie/cowrie --os ubuntu --version 22.04
 cd ..
-rm -rf obscurer
+rm -rf /tmp/obscurer
 
 echo "[*] Redirecting port 22 to 2222..."
 sudo iptables -t nat -A PREROUTING -p tcp --dport 22 -j REDIRECT --to-port 2222
