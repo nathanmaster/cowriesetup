@@ -37,7 +37,6 @@ source cowrie-env/bin/activate
 
 echo "[*] Installing Cowrie dependencies..."
 pip install --upgrade pip
-pip install --require-hashes -r requirements.txt || pip install -r requirements.txt
 
 echo "[*] Copying default configuration..."
 cp etc/cowrie.cfg.dist etc/cowrie.cfg
