@@ -1,52 +1,56 @@
 #!/bin/bash
 
+# Exit immediately if a command exits with a non-zero status.
 set -e
 
-echo "[*] Installing dependencies..."
-sudo apt update && sudo apt install -y git python3-venv python3-pip libssl-dev libffi-dev build-essential libpython3-dev authbind netfilter-persistent
+# Set variables
+COWRIE_USER="cowrie"
+COWRIE_HOME="/home/$COWRIE_USER/cowrie"
 
-echo "[*] Adding Cowrie User..."
-sudo adduser --disabled-password --gecos "" cowrie
+echo "[*] Updating system..."
+sudo apt update && sudo apt upgrade -y
 
-echo "[*] Cloning Cowrie..."
-sudo -u cowrie git clone https://github.com/cowrie/cowrie.git /home/cowrie/cowrie
-sudo -u cowrie rm -rf /home/cowrie/cowrie/.git
+echo "[*] Installing required dependencies..."
+sudo apt install -y git python3 python3-venv python3-dev libssl-dev libffi-dev \
+    build-essential libpython3-dev libsqlite3-dev virtualenv libbz2-dev \
+    libreadline-dev zlib1g-dev libncurses5-dev libncursesw5-dev liblzma-dev
 
-echo "[*] Setting up Virtual Environment..."
-sudo -u cowrie python3 -m venv /home/cowrie/cowrie/cowrie-env
-sudo -u cowrie /home/cowrie/cowrie/cowrie-env/bin/pip install --upgrade pip
-sudo -u cowrie /home/cowrie/cowrie/cowrie-env/bin/pip install -r /home/cowrie/cowrie/requirements.txt
+# Create user if not exists
+if id "$COWRIE_USER" &>/dev/null; then
+    echo "[*] User $COWRIE_USER already exists."
+else
+    echo "[*] Creating user $COWRIE_USER..."
+    sudo adduser --disabled-password --gecos "" $COWRIE_USER
+fi
 
-echo "[*] Setting up Cowrie Configurations..."
-sudo -u cowrie cp /home/cowrie/cowrie/etc/cowrie.cfg.dist /home/cowrie/cowrie/etc/cowrie.cfg
-sudo -u cowrie cp /home/cowrie/cowrie/etc/userdb.example /home/cowrie/cowrie/etc/userdb.txt
+# Switch to cowrie user and set up Cowrie
+sudo -u $COWRIE_USER bash <<EOF
 
-echo "[*] Installing obscurer..."
-cd /tmp
-git clone https://github.com/411Hall/obscurer.git
-cd obscurer
+echo "[*] Cloning Cowrie repository into $COWRIE_HOME..."
+git clone https://github.com/cowrie/cowrie.git $COWRIE_HOME
 
-# Fix the invalid escape sequence in header
-echo "[*] Fixing invalid escape sequence in header..."
-sed -i 's/\\\//\//g' /tmp/obscurer/obscurer.py  # Fix invalid escape sequences
+cd $COWRIE_HOME
 
-# Fix the Python 2 print statement to Python 3
-echo "[*] Fixing print statements..."
-sed -i 's/print "\(.*\)"/print("\1")/' /tmp/obscurer/obscurer.py
-sed -i 's/print header/print(header)/' /tmp/obscurer/obscurer.py  # Fix the specific print statement
+echo "[*] Creating Python virtual environment..."
+python3 -m venv cowrie-env
+source cowrie-env/bin/activate
 
-# Run obscurer
-python3 /tmp/obscurer/obscurer.py --cowrie_path /home/cowrie/cowrie --os ubuntu --version 22.04
+echo "[*] Installing Cowrie dependencies..."
+pip install --upgrade pip
+pip install --require-hashes -r requirements.txt || pip install -r requirements.txt
 
-# Clean up
-cd ..
-rm -rf /tmp/obscurer
+echo "[*] Copying default configuration..."
+cp etc/cowrie.cfg.dist etc/cowrie.cfg
 
-echo "[*] Redirecting port 22 to 2222..."
-sudo iptables -t nat -A PREROUTING -p tcp --dport 22 -j REDIRECT --to-port 2222
-sudo netfilter-persistent save
+echo "[*] Setup complete."
 
-echo "[*] Starting Cowrie..."
-sudo -u cowrie bash -c "cd /home/cowrie/cowrie && source cowrie-env/bin/activate && authbind --deep ./bin/cowrie start"
+EOF
 
-echo "[✓] Obscured Cowrie honeypot is live!"
+echo ""
+echo "To start Cowrie, run the following commands as the 'cowrie' user:"
+echo "--------------------------------------------------"
+echo "sudo -u cowrie -i"
+echo "cd ~/cowrie"
+echo "source cowrie-env/bin/activate"
+echo "./bin/cowrie start"
+echo "--------------------------------------------------"
