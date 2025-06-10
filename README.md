@@ -12,8 +12,7 @@ This guide explains how to deploy and configure a Cowrie honeypot using Terrafor
 
 - **main.tf**: The main Terraform configuration file. It defines the infrastructure resources (such as the VM instance), networking, and provisioning steps.
 - **user_data.sh**: A shell script provided to the VM as "user data" during creation. It automates the installation of dependencies, cloning the Cowrie setup repository, and initial configuration.
-- **cowrie-setup.sh**: The script (cloned from the repo) that installs and configures Cowrie.
-- **README.md**: This documentation file.
+- **cowrie-setup.sh**: The script that installs and configures Cowrie.
 
 ## How the Setup Works
 
