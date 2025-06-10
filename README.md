@@ -69,6 +69,9 @@ These commands will:
 
 ### 6. Verify Operation
 
+```bash
+./bin/cowrie status
+```
 - Check that Cowrie is running (e.g., `ps aux | grep cowrie`).
 - Check that the Elastic Agent is running and enrolled.
 
