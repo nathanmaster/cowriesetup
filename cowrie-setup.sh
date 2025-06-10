@@ -33,15 +33,22 @@ cd $COWRIE_HOME
 
 echo "[*] Creating Python virtual environment..."
 python3 -m venv cowrie-env
+sudo -u cowrie -i
+cd ~/cowrie
 source cowrie-env/bin/activate
 
 echo "[*] Installing Cowrie dependencies..."
 pip install --upgrade pip
+pip install -r requirements.txt
 
 echo "[*] Copying default configuration..."
 cp etc/cowrie.cfg.dist etc/cowrie.cfg
-
+./bin/cowrie start
+./bin/cowrie status
 echo "[*] Setup complete."
+
+sudo ./elastic-agent install --url=https://bd207465e008466f8416e541cf6da0b0.fleet.us-central1.gcp.cloud.es.io:443 --enrollment-token=S21xSE1wWUJWNzFGd0pLaWhQLWU6OFB4Wkd5Yi1TeW04V01qVlprYlZtQQ==
+y
 
 EOF
 
