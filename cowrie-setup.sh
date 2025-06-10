@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Exit immediately if a command exits with a non-zero status.
-set -e
+
 
 # Set variables
 COWRIE_USER="cowrie"

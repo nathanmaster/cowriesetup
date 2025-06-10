@@ -53,11 +53,11 @@ resource "aws_route_table_association" "public" {
 }
 
 # Create key pair
-resource "aws_key_pair" "deployer" {
-  key_name   = "deployer-key-2"
-  public_key = file("C:/Users/sumah/.ssh/deployer-key-2.pub")
-
-}
+#resource "aws_key_pair" "deployer" {
+# key_name   = "deployer-key-2"
+# public_key = file("C:/Users/sumah/.ssh/deployer-key-2.pub")
+#
+#}
 
 # Create security group
 resource "aws_security_group" "cowrie_sg" {

@@ -31,8 +31,8 @@ sudo sed -i 's/\r$//' cowrie-setup.sh
 curl -L -O https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.18.2-linux-x86_64.tar.gz 
 tar xzvf elastic-agent-8.18.2-linux-x86_64.tar.gz
 cd elastic-agent-8.18.2-linux-x86_64
-sudo ./elastic-agent install --url=https://bd207465e008466f8416e541cf6da0b0.fleet.us-central1.gcp.cloud.es.io:443 --enrollment-token=S21xSE1wWUJWNzFGd0pLaWhQLWU6OFB4Wkd5Yi1TeW04V01qVlprYlZtQQ==
+yum ./elastic-agent install --url=https://bd207465e008466f8416e541cf6da0b0.fleet.us-central1.gcp.cloud.es.io:443 --enrollment-token=S21xSE1wWUJWNzFGd0pLaWhQLWU6OFB4Wkd5Yi1TeW04V01qVlprYlZtQQ==
 
 # Run the Cowrie setup script
 
-sudo bash cowrie-setup.sh
+yum bash cowrie-setup.sh
