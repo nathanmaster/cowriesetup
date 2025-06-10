@@ -8,6 +8,24 @@ This guide explains how to deploy and configure a Cowrie honeypot using Terrafor
 - AWS CLI or other cloud provider CLI configured (if applicable)
 - SSH key pair for accessing the instance
 
+## File Overview
+
+- **main.tf**: The main Terraform configuration file. It defines the infrastructure resources (such as the VM instance), networking, and provisioning steps.
+- **user_data.sh**: A shell script provided to the VM as "user data" during creation. It automates the installation of dependencies, cloning the Cowrie setup repository, and initial configuration.
+- **cowrie-setup.sh**: The script (cloned from the repo) that installs and configures Cowrie.
+- **README.md**: This documentation file.
+
+## How the Setup Works
+
+1. **Terraform** uses `main.tf` to provision a new VM instance.
+2. The VM is configured to run `user_data.sh` on first boot.
+3. `user_data.sh`:
+   - Updates the system and installs dependencies.
+   - Clones the Cowrie setup repository into `/home/ubuntu/cowriesetup`.
+   - Makes the setup script executable and prepares the Elastic Agent.
+   - Sets up SSH password authentication for easy access.
+4. After the instance is running, you can SSH in and manually run the setup scripts to verify everything is working.
+
 ## Steps
 
 ### 1. Initialize Terraform
@@ -52,13 +70,29 @@ The default password is:
 !ThisismypasswordandIlovestarwars!
 ```
 
-### 5. Run Setup Commands
+### 5. Clone the Repository or Copy Files (if not using user_data)
+
+If you are not using the provided `user_data.sh` script, you can manually clone the repository or copy the files:
+
+```bash
+git clone https://github.com/nathanmaster/cowriesetup.git
+cd cowriesetup
+```
+
+Alternatively, upload your local files to the instance using `scp`:
+
+```bash
+scp -r ./cowriesetup ubuntu@<public-ip>:/home/ubuntu/
+```
+
+### 6. Run Setup Commands
 
 Once logged in, run the following commands to ensure correct operation:
 
 ```bash
 cd ./cowriesetup
 sudo bash cowrie-setup.sh
+cd ../elastic-agent-8.18.2-linux-x86_64
 sudo ./elastic-agent install --url=https://bd207465e008466f8416e541cf6da0b0.fleet.us-central1.gcp.cloud.es.io:443 --enrollment-token=S21xSE1wWUJWNzFGd0pLaWhQLWU6OFB4Wkd5Yi1TeW04V01qVlprYlZtQQ==
 ```
 
@@ -67,7 +101,24 @@ These commands will:
 - Set up Cowrie using the provided script.
 - Install and enroll the Elastic Agent for monitoring.
 
-### 6. Verify Operation
+### 7. File Tree After Installation
+
+After installation, your home directory should look like this:
+
+```
+/home/ubuntu/
+├── cowriesetup/
+│   ├── cowrie-setup.sh
+│   └── ...other setup files...
+├── elastic-agent-8.18.2-linux-x86_64/
+│   ├── elastic-agent
+│   └── ...other agent files...
+├── main.tf
+├── user_data 1.sh
+└── README.md
+```
+
+### 8. Verify Operation
 
 ```bash
 ./bin/cowrie status
@@ -78,4 +129,6 @@ These commands will:
 ---
 
 **Note:** The user data script automates most of these steps, but running the above commands manually ensures everything is set up correctly.
+
+
 

@@ -19,7 +19,7 @@ sudo systemctl restart ssh
 # Clone the Cowrie setup repo
 
 cd /home/ubuntu
-sudo git clone https://github.com/gordondavis8379/cowriesetup.git
+sudo git clone https://github.com/nathanmaster/cowriesetup.git
 cd cowriesetup
 
 # Make the setup script executable and clean line endings
